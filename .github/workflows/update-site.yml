@@ -1,0 +1,72 @@
+name: Update Site Content
+
+on:
+  workflow_dispatch:  # This allows manual triggering of the workflow
+
+# Add permissions for the workflow
+permissions:
+  contents: write  # This allows the workflow to push changes
+
+jobs:
+  update-content:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.PAT }}
+    
+    - name: Create directories
+      run: |
+        mkdir -p get-in-touch projects/hapsy projects/rootie projects/mythamin projects/skenero-cz
+    
+    - name: Create Clarity tracking code
+      run: |
+        printf "<!-- Clarity tracking code -->\n<script type=\"text/javascript\">\n    (function(c,l,a,r,i,t,y){\n        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};\n        t=l.createElement(r);t.async=1;t.src=\"https://www.clarity.ms/tag/\"+i;\n        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);\n    })(window, document, \"clarity\", \"script\", \"r8bd1fgcsz\");\n</script>\n<!-- End Clarity tracking code -->" > clarity.txt
+    
+    - name: Download and process index page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai" > temp.html
+        awk '/<head>/{print;system("cat clarity.txt");next} {print}' temp.html > index.html
+    
+    - name: Download and process get-in-touch page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/get-in-touch" > temp.html
+        awk '/<head>/{print;system("cat clarity.txt");next} {print}' temp.html > get-in-touch/index.html
+    
+    - name: Download and process hapsy project page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/projects/hapsy" > temp.html
+        awk '/<head>/{print;system("cat clarity.txt");next} {print}' temp.html > projects/hapsy/index.html
+    
+    - name: Download and process rootie project page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/projects/rootie" > temp.html
+        awk '/<head>/{print;system("cat clarity.txt");next} {print}' temp.html > projects/rootie/index.html
+    
+    - name: Download and process mythamin project page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/projects/mythamin" > temp.html
+        awk '/<head>/{print;system("cat clarity.txt");next} {print}' temp.html > projects/mythamin/index.html
+    
+    - name: Download and process skenero-cz project page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/projects/skenero-cz" > temp.html
+        awk '/<head>/{print;system("cat clarity.txt");next} {print}' temp.html > projects/skenero-cz/index.html
+
+    - name: Download and process 404 page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/404" > temp.html
+        awk '/<head>/{print;system("cat clarity.txt");next} {print}' temp.html > 404.html
+    
+    - name: Clean up temporary files
+      run: |
+        rm temp.html clarity.txt
+    
+    - name: Commit and push changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add index.html get-in-touch/index.html projects/hapsy/index.html projects/rootie/index.html projects/mythamin/index.html projects/skenero-cz/index.html 404.html
+        git commit -m "Update site content with Clarity tracking"
+        git push 
