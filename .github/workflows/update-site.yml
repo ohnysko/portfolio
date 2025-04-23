@@ -18,7 +18,7 @@ jobs:
     
     - name: Create directories
       run: |
-        mkdir -p portfolio get-in-touch thank-you hapsy skenero-cz rootie mythamin
+        mkdir -p portfolio get-in-touch thank-you hapsy skenero-cz rootie mythamin book/download
     
     - name: Create GTM tags file
       run: |
@@ -69,6 +69,16 @@ jobs:
         curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/mythamin" > temp.html
         awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > mythamin/index.html
 
+    - name: Download and process book page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/book" > temp.html
+        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > book/index.html
+
+    - name: Download and process book download page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/book/download" > temp.html
+        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > book/download/index.html
+
     - name: Download and process 404 page
       run: |
         curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/404" > temp.html
@@ -82,6 +92,6 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add index.html portfolio/index.html get-in-touch/index.html thank-you/index.html hapsy/index.html skenero-cz/index.html rootie/index.html mythamin/index.html 404.html
+        git add index.html portfolio/index.html get-in-touch/index.html thank-you/index.html hapsy/index.html skenero-cz/index.html rootie/index.html mythamin/index.html book/index.html book/download/index.html 404.html
         git commit -m "Update site content with GTM and Clarity tracking"
         git push
