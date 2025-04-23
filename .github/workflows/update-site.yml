@@ -18,7 +18,7 @@ jobs:
     
     - name: Create directories
       run: |
-        mkdir -p get-in-touch projects/hapsy projects/rootie projects/mythamin projects/skenero-cz
+        mkdir -p portfolio get-in-touch thank-you hapsy skenero-cz rootie mythamin
     
     - name: Create GTM tags file
       run: |
@@ -34,30 +34,40 @@ jobs:
         curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai" > temp.html
         awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > index.html
     
+    - name: Download and process portfolio page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/portfolio" > temp.html
+        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > portfolio/index.html
+    
     - name: Download and process get-in-touch page
       run: |
         curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/get-in-touch" > temp.html
         awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > get-in-touch/index.html
     
-    - name: Download and process hapsy project page
+    - name: Download and process thank-you page
       run: |
-        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/projects/hapsy" > temp.html
-        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > projects/hapsy/index.html
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/thank-you" > temp.html
+        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > thank-you/index.html
     
-    - name: Download and process rootie project page
+    - name: Download and process hapsy page
       run: |
-        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/projects/rootie" > temp.html
-        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > projects/rootie/index.html
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/hapsy" > temp.html
+        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > hapsy/index.html
     
-    - name: Download and process mythamin project page
+    - name: Download and process skenero-cz page
       run: |
-        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/projects/mythamin" > temp.html
-        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > projects/mythamin/index.html
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/skenero-cz" > temp.html
+        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > skenero-cz/index.html
     
-    - name: Download and process skenero-cz project page
+    - name: Download and process rootie page
       run: |
-        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/projects/skenero-cz" > temp.html
-        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > projects/skenero-cz/index.html
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/rootie" > temp.html
+        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > rootie/index.html
+    
+    - name: Download and process mythamin page
+      run: |
+        curl -s "https://tech.nocodexport.com/download?site=ohnysko.framer.ai/mythamin" > temp.html
+        awk '/<head>/{print;system("cat gtm-head.txt");system("cat clarity.txt");next} /<body>/{print;system("cat gtm-body.txt");next} {print}' temp.html > mythamin/index.html
 
     - name: Download and process 404 page
       run: |
@@ -72,6 +82,6 @@ jobs:
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
-        git add index.html get-in-touch/index.html projects/hapsy/index.html projects/rootie/index.html projects/rootie/index.html projects/mythamin/index.html projects/skenero-cz/index.html 404.html
+        git add index.html portfolio/index.html get-in-touch/index.html thank-you/index.html hapsy/index.html skenero-cz/index.html rootie/index.html mythamin/index.html 404.html
         git commit -m "Update site content with GTM and Clarity tracking"
         git push
